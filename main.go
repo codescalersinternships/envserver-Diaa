@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"github.com/codescalersinternships/envserver-Diaa/server"
 	"log"
+
+	"github.com/codescalersinternships/envserver-Diaa/server"
 )
 
 func main() {
