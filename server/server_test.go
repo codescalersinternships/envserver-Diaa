@@ -97,31 +97,30 @@ func TestGetEnvKey(t *testing.T) {
 
 func TestGetEnv(t *testing.T) {
 
+	t.Run("testing /env", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodGet, "/env", nil)
 
-		t.Run("testing /env", func(t *testing.T) {
-			req, _ := http.NewRequest(http.MethodGet, "/env", nil)
+		res := httptest.NewRecorder()
 
-			res := httptest.NewRecorder()
+		want := make(map[string]string)
+		for _, env := range os.Environ() {
+			pair := strings.SplitN(env, "=", 2)
+			want[pair[0]] = pair[1]
+		}
 
-			want := make(map[string]string)
-				for _, env := range os.Environ() {
-					pair := strings.SplitN(env, "=", 2)
-					want[pair[0]]=pair[1]
-				}
+		envHandler(res, req)
 
-			envHandler(res, req)
+		assert.Equal(t, 200, res.Code, "got %d status code than 200", res.Code)
 
-			assert.Equal(t, 200, res.Code, "got %d status code than 200", res.Code)
+		assert.Equal(t, "application/json", res.Header().Get("Content-Type"), " got %s content type than json", res.Header().Get("Content-Type"))
 
-			assert.Equal(t, "application/json", res.Header().Get("Content-Type"), " got %s content type than json", res.Header().Get("Content-Type"))
+		var got map[string]string
+		json.NewDecoder(res.Body).Decode(&got)
 
-			var got map[string]string
-			json.NewDecoder(res.Body).Decode(&got)
-
-			if !reflect.DeepEqual(got, want) {
-				t.Errorf("expected map %v but got %v", want, got)
-			}
-		})
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("expected map %v but got %v", want, got)
+		}
+	})
 
 	t.Run("sending request with method post", func(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodPost, "/env", nil)
@@ -157,14 +156,12 @@ func TestGetEnv(t *testing.T) {
 
 }
 
-
-func TestSetPort(t * testing.T){
+func TestSetPort(t *testing.T) {
 	app := App{}
 
 	app.SetPort(50)
 
-	want :=50
+	want := 50
 
-	assert.Equal(t,want,app.port)
+	assert.Equal(t, want, app.port)
 }
-
