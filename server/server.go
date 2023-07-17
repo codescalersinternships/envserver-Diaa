@@ -2,40 +2,50 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"strings"
 )
 
+var ErrInvalidPort = errors.New("port should be between 1024:65000")
 
-type App struct{
-	port int 
+type App struct {
+	port int
 }
 
-
-func (app * App) SetPort(p int){
-	app.port=p
+func NewApp() *App {
+	return &App{}
 }
 
-func (app * App) Run(){
+func (app *App) SetPort(p int) error {
+	if p < 1024 || p > 65000 {
+		return ErrInvalidPort
+	}
+	app.port = p
+	return nil
+}
+
+func (app *App) Run() error {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/env", envHandler)
 
-	mux.HandleFunc("/env/", envKeyHandler)
+	mux.HandleFunc("/env/", envHandler)
 
-	err := http.ListenAndServe(fmt.Sprintf(":%d",app.port), mux)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", app.port), mux)
 
 	if err == http.ErrServerClosed {
-		fmt.Println("server closed")
-		os.Exit(1)
-	} else if err != nil {
-		fmt.Printf("error starting the server %v", err)
-		os.Exit(1)
-	} else {
-		fmt.Println("server running on ", os.Getenv("PORT"))
+		return fmt.Errorf("server closed")
+
 	}
+	if err != nil {
+		return fmt.Errorf("error starting the server %v", err)
+
+	}
+	return nil
+
 }
 
 func envHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,48 +54,40 @@ func envHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	env := make(map[string]string)
-	for _, envVar := range os.Environ() {
-
-		pair := strings.SplitN(envVar, "=", 2)
-
-		env[pair[0]] = pair[1]
-	}
-
-	w.WriteHeader(http.StatusOK)
 
 	w.Header().Set("Content-Type", "application/json")
-
 	encoder := json.NewEncoder(w)
-	err := encoder.Encode(env)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-}
 
-func envKeyHandler(w http.ResponseWriter, r *http.Request) {
+	key := strings.TrimPrefix(r.URL.Path, "/env")
+	if key == "" {
 
-	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusNotFound)
+		env := make(map[string]string)
+		for _, envVar := range os.Environ() {
+
+			pair := strings.SplitN(envVar, "=", 2)
+
+			env[pair[0]] = pair[1]
+		}
+
+		err := encoder.Encode(env)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 		return
 	}
-
-	key := strings.TrimPrefix(r.URL.Path, "/env/")
+	key = key[1:]
 
 	value := os.Getenv(key)
 
 	if value == "" {
 		w.WriteHeader(http.StatusNotFound)
-	} else {
-		w.WriteHeader(http.StatusOK)
+		return
 	}
 
-	_, err := w.Write([]byte(value))
+	err := encoder.Encode(value)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
 }
-
-

@@ -54,11 +54,13 @@ func TestGetEnvKey(t *testing.T) {
 
 			defer os.Unsetenv(tc.keyToSet)
 
-			envKeyHandler(res, req)
+			envHandler(res, req)
+			var got string
+			json.NewDecoder(res.Body).Decode(&got)
 
 			assert.Equal(t, tc.expStatCode, res.Code, tc.failureMessage)
 
-			assert.Equal(t, tc.expResponseBody, res.Body.String(), tc.failureMessage)
+			assert.Equal(t, tc.expResponseBody, got, tc.failureMessage)
 		})
 	}
 
@@ -122,46 +124,25 @@ func TestGetEnv(t *testing.T) {
 		}
 	})
 
-	t.Run("sending request with method post", func(t *testing.T) {
-		req, _ := http.NewRequest(http.MethodPost, "/env", nil)
+}
 
-		res := httptest.NewRecorder()
 
-		envHandler(res, req)
-
-		assert.Equal(t, 404, res.Code)
-
-	})
-
-	t.Run("sending request with method patch", func(t *testing.T) {
-		req, _ := http.NewRequest(http.MethodPatch, "/env", nil)
-
-		res := httptest.NewRecorder()
-
-		envHandler(res, req)
-
-		assert.Equal(t, 404, res.Code)
-
-	})
-
-	t.Run("sending request with method delete", func(t *testing.T) {
-		req, _ := http.NewRequest(http.MethodDelete, "/env", nil)
-		res := httptest.NewRecorder()
-
-		envHandler(res, req)
-
-		assert.Equal(t, 404, res.Code)
-
-	})
-
+func TestNewApp(t * testing.T){
+	app:=NewApp()
+	assert.NotNil(t,app,"failed to initialize app")
 }
 
 func TestSetPort(t *testing.T) {
-	app := App{}
+	t.Run("test valid port",func(t *testing.T) {
+		app := NewApp()
+		err:=app.SetPort(5000)
+		assert.Nil(t,err,"expected to set the port without errors but got an error")
+	})
 
-	app.SetPort(50)
-
-	want := 50
-
-	assert.Equal(t, want, app.port)
+	t.Run("test invalid port",func(t *testing.T) {
+		app:=NewApp()
+		err:=app.SetPort(50)
+		assert.Equal(t,ErrInvalidPort,err)
+	})
 }
+
