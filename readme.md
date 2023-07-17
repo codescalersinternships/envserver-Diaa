@@ -14,23 +14,38 @@ To run the service, you need to have Go installed and set up on your system.
 ```
 git clone https://github.com/codescalersinternships/envserver-Diaa.git
 ```
-
-2. Create .env file with env var PORT
-
-```.env
-PORT = 8080
+2. Navigate to envserver-Diaa
+```
+cd envserver-Diaa
 ```
 3. Install dependencies
 ```go
-go get -d ./...
+go mod download
 ```
 
-4. Run the service
-```
-go run main.go
+4. build the service
+```go
+go build -o app
 ```
 
-The service will listen on the port specified by the PORT environment variable (like above is 8080). You can use a web browser or a tool like curl to make requests to the endpoints. For example:
+5. Run the service.
+```go
+./app -p <port>
+```
+
+### Run using Docker
+First make sure that docker and docker-compose is installed in your system
+
+1. Build the image
+```docker
+docker-compose build
+```
+2. Run the container
+```
+docker-compose up -d
+```
+Now the app is running on port 8080
+
 
 ``` cmd
 # Get all the environment variables
@@ -47,6 +62,6 @@ To test the service, you can use the go test command in the project directory. T
 
 ``` go
 # Run the tests
-go test -v 
+go test -v ./... 
 ```
 

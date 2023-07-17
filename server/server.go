@@ -89,6 +89,3 @@ func envKeyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 
-// mkdir coverage
-// go test -v -vet=off ./... -coverprofile=coverage/coverage.out
-// go tool cover -html=coverage/coverage.out -o coverage/coverage.html
