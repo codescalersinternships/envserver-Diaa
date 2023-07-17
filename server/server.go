@@ -9,16 +9,20 @@ import (
 	"strings"
 )
 
+// ErrInvalidPort is an error for port validation
 var ErrInvalidPort = errors.New("port should be between 1024:65000")
 
+// App is a struct contains the program configs like port
 type App struct {
 	port int
 }
 
+// NewApp factory function for the App struct. returns a newApp instance
 func NewApp() *App {
 	return &App{}
 }
 
+// SetPort function to set the port and check that the port is valid
 func (app *App) SetPort(p int) error {
 	if p < 1024 || p > 65000 {
 		return ErrInvalidPort
@@ -27,6 +31,7 @@ func (app *App) SetPort(p int) error {
 	return nil
 }
 
+// Run is a function that starts the server
 func (app *App) Run() error {
 	mux := http.NewServeMux()
 
