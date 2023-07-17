@@ -54,18 +54,16 @@ func envHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	
+
 	key := strings.TrimPrefix(r.URL.Path, "/env")
 
 	switch key {
 	case "":
-		handleGetEnv(w,r)
+		handleGetEnv(w, r)
 	default:
-		handleGetKey(w,r)
+		handleGetKey(w, r)
 
 	}
-
-	
 
 }
 
@@ -87,8 +85,7 @@ func handleGetEnv(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
-func handleGetKey(w http.ResponseWriter, r * http.Request){
+func handleGetKey(w http.ResponseWriter, r *http.Request) {
 	key := strings.TrimPrefix(r.URL.Path, "/env/")
 	encoder := json.NewEncoder(w)
 
