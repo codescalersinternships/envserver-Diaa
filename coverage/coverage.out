@@ -1,0 +1,19 @@
+mode: set
+github.com/codescalersinternships/envserver-Diaa/server.go:12.13,22.33 5 0
+github.com/codescalersinternships/envserver-Diaa/server.go:22.33,25.3 2 0
+github.com/codescalersinternships/envserver-Diaa/server.go:25.8,25.23 1 0
+github.com/codescalersinternships/envserver-Diaa/server.go:25.23,28.3 2 0
+github.com/codescalersinternships/envserver-Diaa/server.go:28.8,30.3 1 0
+github.com/codescalersinternships/envserver-Diaa/server.go:34.57,36.32 1 1
+github.com/codescalersinternships/envserver-Diaa/server.go:36.32,39.3 2 1
+github.com/codescalersinternships/envserver-Diaa/server.go:40.2,41.38 2 1
+github.com/codescalersinternships/envserver-Diaa/server.go:41.38,46.3 2 1
+github.com/codescalersinternships/envserver-Diaa/server.go:48.2,54.16 5 1
+github.com/codescalersinternships/envserver-Diaa/server.go:54.16,56.3 1 0
+github.com/codescalersinternships/envserver-Diaa/server.go:59.60,61.32 1 1
+github.com/codescalersinternships/envserver-Diaa/server.go:61.32,64.3 2 0
+github.com/codescalersinternships/envserver-Diaa/server.go:66.2,70.17 3 1
+github.com/codescalersinternships/envserver-Diaa/server.go:70.17,72.3 1 1
+github.com/codescalersinternships/envserver-Diaa/server.go:72.8,74.3 1 1
+github.com/codescalersinternships/envserver-Diaa/server.go:76.2,78.16 2 1
+github.com/codescalersinternships/envserver-Diaa/server.go:78.16,80.3 1 0
