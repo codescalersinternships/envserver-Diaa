@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/codescalersinternships/envserver-Diaa/internal"
+	server "github.com/codescalersinternships/envserver-Diaa/internal"
 )
 
 func main() {
