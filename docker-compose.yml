@@ -7,4 +7,3 @@ services:
     image: go
     ports:
     - "8080:8080"
-    

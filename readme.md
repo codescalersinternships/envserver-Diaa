@@ -25,7 +25,7 @@ go mod download
 
 4. build the service
 ```go
-go build -o app
+go build -o app cmd/main.go
 ```
 
 5. Run the service.
@@ -64,4 +64,3 @@ To test the service, you can use the go test command in the project directory. T
 # Run the tests
 go test -v ./... 
 ```
-
