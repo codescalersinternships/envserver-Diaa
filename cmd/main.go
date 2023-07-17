@@ -13,8 +13,8 @@ func main() {
 
 	flag.Parse()
 
-	app := server.NewApp()
-	err := app.SetPort(portFlag)
+	app, err := server.NewApp(portFlag)
+
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -14,21 +14,16 @@ var ErrInvalidPort = errors.New("port should be between 1024:65000")
 
 // App is a struct contains the program configs like port
 type App struct {
-	port int
+	Port int
 }
 
-// NewApp factory function for the App struct. returns a newApp instance
-func NewApp() *App {
-	return &App{}
-}
+// NewApp factory function for the App struct. returns a newApp instance with the port
+func NewApp(p int) (*App, error) {
 
-// SetPort function to set the port and check that the port is valid
-func (app *App) SetPort(p int) error {
-	if p < 1024 || p > 65000 {
-		return ErrInvalidPort
+	if p < 1 || p > 65535 {
+		return nil, ErrInvalidPort
 	}
-	app.port = p
-	return nil
+	return &App{Port: p}, nil
 }
 
 // Run is a function that starts the server
@@ -39,7 +34,7 @@ func (app *App) Run() error {
 
 	mux.HandleFunc("/env/", envHandler)
 
-	err := http.ListenAndServe(fmt.Sprintf(":%d", app.port), mux)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", app.Port), mux)
 
 	if err == http.ErrServerClosed {
 		return fmt.Errorf("server closed")
@@ -59,28 +54,43 @@ func envHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	encoder := json.NewEncoder(w)
-
+	
 	key := strings.TrimPrefix(r.URL.Path, "/env")
-	if key == "" {
 
-		env := make(map[string]string)
-		for _, envVar := range os.Environ() {
+	switch key {
+	case "":
+		handleGetEnv(w,r)
+	default:
+		handleGetKey(w,r)
 
-			pair := strings.SplitN(envVar, "=", 2)
-
-			env[pair[0]] = pair[1]
-		}
-
-		err := encoder.Encode(env)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-		}
-		return
 	}
-	key = key[1:]
+
+	
+
+}
+
+func handleGetEnv(w http.ResponseWriter, r *http.Request) {
+	encoder := json.NewEncoder(w)
+	w.Header().Set("Content-Type", "application/json")
+
+	env := make(map[string]string)
+	for _, envVar := range os.Environ() {
+
+		pair := strings.SplitN(envVar, "=", 2)
+
+		env[pair[0]] = pair[1]
+	}
+
+	err := encoder.Encode(env)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+
+func handleGetKey(w http.ResponseWriter, r * http.Request){
+	key := strings.TrimPrefix(r.URL.Path, "/env/")
+	encoder := json.NewEncoder(w)
 
 	value := os.Getenv(key)
 
@@ -94,5 +104,4 @@ func envHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-
 }

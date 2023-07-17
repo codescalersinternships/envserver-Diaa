@@ -127,20 +127,18 @@ func TestGetEnv(t *testing.T) {
 }
 
 func TestNewApp(t *testing.T) {
-	app := NewApp()
-	assert.NotNil(t, app, "failed to initialize app")
-}
+	t.Run("getting app with valid port",func(t *testing.T) {
+		app,err := NewApp(5000)
 
-func TestSetPort(t *testing.T) {
-	t.Run("test valid port", func(t *testing.T) {
-		app := NewApp()
-		err := app.SetPort(5000)
-		assert.Nil(t, err, "expected to set the port without errors but got an error")
+		assert.Nil(t,err)
+		assert.NotNil(t,app)
+
 	})
+	t.Run("getting app with invalid port",func(t *testing.T) {
+		app,err := NewApp(90000)
 
-	t.Run("test invalid port", func(t *testing.T) {
-		app := NewApp()
-		err := app.SetPort(50)
-		assert.Equal(t, ErrInvalidPort, err)
+		assert.Equal(t,ErrInvalidPort,err)
+		assert.Nil(t,app)
+
 	})
 }
