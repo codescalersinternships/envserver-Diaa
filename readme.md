@@ -36,11 +36,8 @@ go build -o app cmd/main.go
 ### Run using Docker
 First make sure that docker and docker-compose is installed in your system
 
-1. Build the image
-```docker
-docker-compose build
-```
-2. Run the container
+
+1. Run the container
 ```
 docker-compose up -d
 ```
