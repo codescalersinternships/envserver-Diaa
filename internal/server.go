@@ -10,7 +10,7 @@ import (
 )
 
 // ErrInvalidPort is an error for port validation
-var ErrInvalidPort = errors.New("port should be between 1024:65000")
+var ErrInvalidPort = errors.New("port should be between 1-65535")
 
 // App is a struct contains the program configs like port
 type App struct {
@@ -41,7 +41,7 @@ func (app *App) Run() error {
 
 	}
 	if err != nil {
-		return fmt.Errorf("error starting the server %v", err)
+		return fmt.Errorf("error starting the server %w", err)
 
 	}
 	return nil
