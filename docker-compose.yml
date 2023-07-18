@@ -1,0 +1,9 @@
+version: '3'
+services:
+  envserver:
+    build:
+      context: . 
+    container_name: envserver-diaa
+    image: go
+    ports:
+    - "8080:8080"
