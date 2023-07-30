@@ -13,8 +13,6 @@ EXPOSE 8080
 
 FROM alpine:latest 
 
-RUN apk --no-cache add ca-certificates
-
 WORKDIR /app/
 
 COPY --from=build_stage ./app/bin/app ./
