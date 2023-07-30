@@ -17,6 +17,6 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /app/
 
-COPY --from=build_stage ./app ./
+COPY --from=build_stage ./app/bin/app ./
 
-CMD [ "./bin/app","-p","8080" ]
+CMD [ "./app","-p","8080" ]
