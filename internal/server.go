@@ -67,7 +67,7 @@ func envHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func handleGetEnv(w http.ResponseWriter, r *http.Request) {
+func handleGetEnv(w http.ResponseWriter, _ *http.Request) {
 	encoder := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 
